@@ -89,7 +89,7 @@ class RouterConfig:
             self._save()
 
     def _save(self) -> None:
-        """Save configuration to disk."""
+        """Save configuration to disk with file locking."""
         data = {
             "apis": [api.model_dump() for api in self._apis],
             "state": self._state.model_dump(),
@@ -98,6 +98,12 @@ class RouterConfig:
         }
 
         with open(self.config_path, "w") as f:
+            # File locking to prevent corruption from concurrent writes
+            try:
+                import fcntl
+                fcntl.flock(f, fcntl.LOCK_EX)
+            except (ImportError, OSError):
+                pass  # fcntl not available on Windows — proceed without locking
             json.dump(data, f, indent=2)
 
     # ==================== API Management ====================

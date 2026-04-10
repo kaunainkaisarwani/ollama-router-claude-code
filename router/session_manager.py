@@ -7,6 +7,7 @@ import asyncio
 import os
 import subprocess
 import sys
+import time
 from typing import Any, Dict, List, Optional, Tuple
 from dataclasses import dataclass
 
@@ -24,7 +25,7 @@ from .utils import (
 @dataclass
 class CLISession:
     """Represents a single managed Claude Code CLI instance."""
-    process: subprocess.Popen
+    process: asyncio.subprocess.Process
     api: ApiEntry
     env: Dict[str, str]
     cmd: List[str]
@@ -117,15 +118,26 @@ class SessionManager:
                 cmd = self._build_command(prompt, args)
 
                 # 3. Launch process with direct terminal passthrough
-                # We use Popen without PIPE for stdout/stderr to allow
-                # the CLI to maintain its interactive TUI.
-                process = subprocess.Popen(
-                    cmd,
+                # Using asyncio subprocess to avoid blocking the event loop
+                process = await asyncio.create_subprocess_exec(
+                    *cmd,
                     env=env,
                 )
 
-                # 4. Wait for process to complete
-                returncode = process.wait()
+                # Track the current session
+                self._current_session = CLISession(
+                    process=process,
+                    api=api,
+                    env=env,
+                    cmd=cmd,
+                    start_time=time.time(),
+                )
+
+                # 4. Wait for process to complete (non-blocking)
+                returncode = await process.wait()
+
+                # Clear session reference
+                self._current_session = None
 
                 # 5. Check for failure that might require rotation
                 if returncode != 0:
@@ -165,6 +177,6 @@ class SessionManager:
 
     def stop_current(self):
         """Terminate the currently running session."""
-        if self._current_session:
+        if self._current_session and self._current_session.process.returncode is None:
             self._current_session.process.terminate()
             self._current_session = None

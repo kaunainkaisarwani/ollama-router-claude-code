@@ -369,7 +369,7 @@ class ApiRotator:
         try:
             async with httpx.AsyncClient(timeout=timeout) as client:
                 # Try a simple request to check API validity
-                url = f"{api.api_base}/tags" if "ollama.com" in api.api_base else api.api_base
+                url = f"{api.api_base}/tags"
                 response = await client.get(
                     url,
                     headers={"Authorization": f"Bearer {api.api_key}"},

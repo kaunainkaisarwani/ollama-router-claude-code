@@ -67,8 +67,10 @@ def _fetch_available_models(api_key: str, api_base: str = "https://ollama.com/ap
     api_key = api_key.strip()
     tags_url = f"{api_base.rstrip('/')}/tags"
 
-    # Use unverified SSL context to avoid cert issues on macOS/Windows
-    ctx = ssl._create_unverified_context()
+    # Use a permissive SSL context to avoid cert issues on macOS/Windows
+    ctx = ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
 
     try:
         req = urllib.request.Request(tags_url)
@@ -557,7 +559,9 @@ def reset_stats(
     config = get_config()
 
     if not confirm:
-        typer.confirm("Reset all statistics and cooldowns?", default=True)
+        if not typer.confirm("Reset all statistics and cooldowns?", default=True):
+            print_info("Cancelled.")
+            return
 
     config.reset_stats()
     print_success("Reset all statistics and cooldowns.")
@@ -606,6 +610,9 @@ def _open_new_terminal_with_launch() -> bool:
       - Windows: cmd.exe via 'start'
       - Linux:   tries gnome-terminal, konsole, xfce4-terminal, xterm
 
+    Polls the gateway /health endpoint before launching instead of a
+    fixed sleep, so it works reliably on slow machines.
+
     Returns True if a terminal was successfully opened.
     """
     import shutil
@@ -617,31 +624,45 @@ def _open_new_terminal_with_launch() -> bool:
         router_bin = "ollama-router"
 
     launch_cmd = f"{router_bin} launch"
+
+    # Poll /health up to 15 times (1s apart) before launching
+    health_poll = (
+        'for i in $(seq 1 15); do '
+        'curl -sf http://localhost:8082/health > /dev/null 2>&1 && break; '
+        'sleep 1; done'
+    )
+    poll_and_launch = f"{health_poll} && {launch_cmd}"
+
     platform = sys.platform
 
     try:
         if platform == "darwin":
             sp.Popen([
                 "osascript", "-e",
-                f'tell application "Terminal" to do script "sleep 3 && {launch_cmd}"'
+                f'tell application "Terminal" to do script "{poll_and_launch}"'
             ])
             return True
 
         elif platform == "win32":
+            # Windows: use timeout as fallback since curl may not be available
+            win_poll = (
+                'for /L %i in (1,1,15) do ('
+                'curl -sf http://localhost:8082/health >nul 2>&1 && goto :launch & '
+                'timeout /t 1 /nobreak >nul) & :launch'
+            )
             sp.Popen(
-                f'start "Claude Code" cmd /k "timeout /t 3 /nobreak > nul & {launch_cmd}"',
+                f'start "Claude Code" cmd /k "{win_poll} & {launch_cmd}"',
                 shell=True
             )
             return True
 
         else:
-            sleep_cmd = f"sleep 3 && {launch_cmd}"
             terminals = [
-                ["gnome-terminal", "--", "bash", "-c", sleep_cmd],
-                ["konsole", "-e", "bash", "-c", sleep_cmd],
-                ["xfce4-terminal", "-e", f"bash -c '{sleep_cmd}'"],
-                ["x-terminal-emulator", "-e", f"bash -c '{sleep_cmd}'"],
-                ["xterm", "-e", f"bash -c '{sleep_cmd}'"],
+                ["gnome-terminal", "--", "bash", "-c", poll_and_launch],
+                ["konsole", "-e", "bash", "-c", poll_and_launch],
+                ["xfce4-terminal", "-e", f"bash -c '{poll_and_launch}'"],
+                ["x-terminal-emulator", "-e", f"bash -c '{poll_and_launch}'"],
+                ["xterm", "-e", f"bash -c '{poll_and_launch}'"],
             ]
             for term_cmd in terminals:
                 if shutil.which(term_cmd[0]):
