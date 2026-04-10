@@ -911,10 +911,11 @@ def main(
         console.print("  [bold cyan]6[/bold cyan]  📋  List APIs")
         console.print("  [bold cyan]7[/bold cyan]  🔍  Health Check")
         console.print("  [bold cyan]8[/bold cyan]  📊  Status")
+        console.print("  [bold cyan]9[/bold cyan]  💝  Support Developer / Tip")
         console.print("  [bold cyan]0[/bold cyan]  ❌  Exit")
         console.print()
 
-        choice = Prompt.ask("Select an option", choices=["0","1","2","3","4","5","6","7","8"], default="0")
+        choice = Prompt.ask("Select an option", choices=["0","1","2","3","4","5","6","7","8","9"], default="0")
 
         if choice == "1":
             start_proxy(port=8082, model=None, auto_launch=True)
@@ -943,6 +944,26 @@ def main(
             check_apis()
         elif choice == "8":
             show_status()
+        elif choice == "9":
+            console.print()
+            console.print(Panel(
+                "[bold yellow]💝 Support Ollama Router[/bold yellow]\n\n"
+                "If this tool saved you time, consider sending a tip!\n"
+                "Send [bold]USDT[/bold] or [bold]USDC[/bold] to any of these wallets:\n\n"
+                "[bold cyan]TRON (TRC20)[/bold cyan]\n"
+                "[white]TMTFRX3RLKuMY57ozqBmvMVXSsz2MQvdkH[/white]\n\n"
+                "[bold yellow]BNB Chain (BEP20)[/bold yellow]\n"
+                "[white]0xd119328e475fd515e5583b41c2efa8d1ca3d6fcb[/white]\n\n"
+                "[bold magenta]Solana (SPL)[/bold magenta]\n"
+                "[white]FpTws9Z4qastW2mUiJVpW7Hj5yjUKGct2h3QG5E3e5sM[/white]\n\n"
+                "[dim]Thank you for your support! 🙏[/dim]",
+                title="[bold]☕ Buy Me a Coffee[/bold]",
+                border_style="yellow",
+                padding=(1, 3),
+            ))
+            console.print()
+            from rich.prompt import Prompt as _P
+            _P.ask("[dim]Press Enter to go back[/dim]")
         elif choice == "0":
             console.print("[dim]Goodbye![/dim]")
             raise typer.Exit()
