@@ -8,20 +8,6 @@
 
 </div>
 
-<div align="center">
-
-### 💝 Support the Developer
-
-If this tool saves you time, consider tipping! Send **USDT / USDC** to:
-
-| Network | Wallet Address |
-|:-------:|:---------------|
-| **TRON (TRC20)** | `TMTFRX3RLKuMY57ozqBmvMVXSsz2MQvdkH` |
-| **BNB Chain (BEP20)** | `0xd119328e475fd515e5583b41c2efa8d1ca3d6fcb` |
-| **Solana (SPL)** | `FpTws9Z4qastW2mUiJVpW7Hj5yjUKGct2h3QG5E3e5sM` |
-
-</div>
-
 ---
 
 ## What Is This?
@@ -39,6 +25,20 @@ Ollama Router is a **drop-in proxy** that lets you use [Claude Code](https://doc
 | 📡 **Real-time Streaming** | Token-by-token output, not buffered |
 | ⏱️ **Smart Cooldowns** | Rate-limited APIs auto-recover after cooldown |
 | 🎨 **Claude Code TUI** | Full interactive terminal UI preserved |
+
+<div align="center">
+
+### 💝 Support the Developer
+
+If this tool saves you time, consider tipping! Send **USDT / USDC** to:
+
+| Network | Wallet Address |
+|:-------:|:---------------|
+| **TRON (TRC20)** | `TMTFRX3RLKuMY57ozqBmvMVXSsz2MQvdkH` |
+| **BNB Chain (BEP20)** | `0xd119328e475fd515e5583b41c2efa8d1ca3d6fcb` |
+| **Solana (SPL)** | `FpTws9Z4qastW2mUiJVpW7Hj5yjUKGct2h3QG5E3e5sM` |
+
+</div>
 
 ---
 
