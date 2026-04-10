@@ -14,6 +14,10 @@
 
 Ollama Router is a **drop-in proxy** that lets you use [Claude Code](https://docs.anthropic.com/claude-code) with **any Ollama model** — Gemma, Qwen, LLaMA, Mistral, and more. It translates between Anthropic's API format and Ollama's API format in real-time, so Claude Code thinks it's talking to Anthropic, but it's actually talking to your Ollama model.
 
+### 💡 Why Use This?
+
+> **Add multiple Ollama API keys and code non-stop.** Perfect for teams where each member has their own API key, or for developers with keys across different accounts. When one key hits a rate limit, the router **automatically switches to the next** — no interruptions, no manual switching. Just add your keys and keep coding.
+
 ### Key Features
 
 | Feature | Description |
