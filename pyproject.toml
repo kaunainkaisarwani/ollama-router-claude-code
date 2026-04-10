@@ -47,9 +47,9 @@ dev = [
 ollama-router = "router.cli:app"
 
 [project.urls]
-Homepage = "https://github.com/ollama-router/ollama-router"
-Repository = "https://github.com/ollama-router/ollama-router"
-Issues = "https://github.com/ollama-router/ollama-router/issues"
+Homepage = "https://github.com/kaunainkaisarwani/ollama-router-claude-code"
+Repository = "https://github.com/kaunainkaisarwani/ollama-router-claude-code"
+Issues = "https://github.com/kaunainkaisarwani/ollama-router-claude-code/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["router"]

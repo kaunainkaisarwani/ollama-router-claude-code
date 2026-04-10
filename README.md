@@ -74,8 +74,8 @@ ollama-router launch
 ### Install from Source
 
 ```bash
-git clone https://github.com/ollama-router/ollama-router.git
-cd ollama-router
+git clone https://github.com/kaunainkaisarwani/ollama-router-claude-code.git
+cd ollama-router-claude-code
 pip install .
 
 # Verify

@@ -60,7 +60,7 @@ pytest
 
 ## Reporting Bugs
 
-Open an [issue](https://github.com/ollama-router/ollama-router/issues) with:
+Open an [issue](https://github.com/kaunainkaisarwani/ollama-router-claude-code/issues) with:
 
 - Steps to reproduce
 - Expected vs actual behavior
@@ -69,7 +69,7 @@ Open an [issue](https://github.com/ollama-router/ollama-router/issues) with:
 
 ## Feature Requests
 
-Open an [issue](https://github.com/ollama-router/ollama-router/issues) describing:
+Open an [issue](https://github.com/kaunainkaisarwani/ollama-router-claude-code/issues) describing:
 
 - What you'd like to see
 - Why it would be useful
